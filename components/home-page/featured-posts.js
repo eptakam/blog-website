@@ -1,6 +1,7 @@
 export default function FeaturedPosts() {
   return (
-    <div></div>
-   
+    <section className={classes.latest}>
+      <h2>Featured Posts</h2>
+    </section>
   );
 }
