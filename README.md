@@ -10,6 +10,10 @@ npm run dev
 yarn dev
 ```
 
+### Markdown
+
+`npm install react-markdown` to install a package which will help us to convert markdown in jsx
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.

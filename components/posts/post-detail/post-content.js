@@ -1,5 +1,7 @@
+import React from 'react';
 import classes from '../../../styles/post-content.module.css';
 import PostHeader from './post-header';
+import ReactMarkdown from 'react-markdown'; // npm install react-markdown: convert markdown to html
 
 const DUMMY_POST = {
   slug: 'getting-started-with-nextjs',
@@ -16,7 +18,8 @@ const imagePath = `/images/posts/${DUMMY_POST.slug}/${DUMMY_POST.image}`;
   return (
     <article className={classes.content}>
       <PostHeader title={DUMMY_POST.title} image={imagePath} />
-      {DUMMY_POST.content}
+      {/* convert markdown to html */}
+      <ReactMarkdown>{DUMMY_POST.content}</ReactMarkdown>
     </article>
   );
 }
