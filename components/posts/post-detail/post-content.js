@@ -2,25 +2,103 @@ import React from "react";
 import classes from "../../../styles/post-content.module.css";
 import PostHeader from "./post-header";
 import ReactMarkdown from "react-markdown"; // npm install react-markdown: convert markdown to html
-
-const DUMMY_POST = {
-  slug: "getting-started-with-nextjs",
-  title: "Getting Started with NextJS",
-  image: "getting-started-nextjs.png",
-  date: "2022-02-10",
-  // markdown symbole: # => <h1>, ## => <h2>, ### => <h3>, #### => <h4>, ##### => <h5>, ###### => <h6>
-  content: "# This is a first post\n\nAnd this is the first post content",
-};
+import Image from "next/image";
 
 export default function PostContent(props) {
   const { post } = props;
   const imagePath = `/images/posts/${post.slug}/${post.image}`;
 
+  /* 
+    renderers: permet de personnaliser le rendu de certains elements markdown. 
+    
+    nous en avons besoin car par defaut react-markdown rend les images avec le tag img, ce qui ne prend pas avantage de l'optimisation des images de Next.js. 
+    
+    comment lui dire que nous voulons utiliser la fonction Image de Next.js pour rendre les images?
+  */
+
+  // ceci ne fonctionne pas avec la nouvelle version de react-markdown!
+
+  // const customRenderers = {
+  //   // react-markdown appelera cette fonction pour chaque image qu'il trouvera dans le markdown
+  //   image(image) {
+  //     return (
+  //       <Image
+  //         src={`/images/posts/${post.slug}/${image.src}`}
+  //         alt={image.alt}
+  //         width={600}
+  //         height={300}
+  //       />
+  //     );
+  //   },
+  // };
+
+  const customComponents = {
+    // react-markdown appelera cette fonction pour chaque image qu'il trouvera dans le markdown
+    // img({ node, ...props }) {
+    //   return (
+    //     <Image
+    //       src={`/images/posts/${post.slug}/${props.src}`}
+    //       alt={props.alt}
+    //       width={600}
+    //       height={300}
+    //     />
+    //   );
+    // },
+
+    // pour eviter les erreurs dues au fait que Next js rend cette image dans une div qui est contenue dans un paragraphe (markdown)
+    p(paragraph) {
+      const { node } = paragraph;
+
+      // si le premier enfant du paragraphe est une image
+      if (node.children[0].tagName === "img") {
+        // retourner l'image sans le paragraphe
+        const image = node.children[0];
+        const { properties } = image;
+        return (
+          <div className={classes.image}>
+            <Image
+              src={`/images/posts/${post.slug}/${properties.src}`}
+              alt={properties.alt}
+              width={600}
+              height={300}
+            />
+          </div>
+        );
+      }
+
+      // si le premier enfant du paragraphe n'est pas une image
+      return <p>{paragraph.children}</p>;
+    },
+  };
+  
+  //     // si le premier enfant du paragraphe est une image
+  //     if (node.children[0].type === "img") {
+  //       // retourner l'image sans le paragraphe
+  //       const image = node.children[0];
+  //       return (
+  //         <div className={classes.image}>
+  //           <Image
+  //             src={`/images/posts/${post.slug}/${props.url}`}
+  //             alt={props.alt}
+  //             width={600}
+  //             height={300}
+  //           />
+  //         </div>
+  //       );
+  //     }
+
+  //     // si le premier enfant du paragraphe n'est pas une image
+  //     return <p>{paragraph.children}</p>;
+  //   },
+  // };
+
   return (
     <article className={classes.content}>
       <PostHeader title={post.title} image={imagePath} />
       {/* convert markdown to html */}
-      <ReactMarkdown>{post.content}</ReactMarkdown>
+      <ReactMarkdown components={customComponents}>
+        {post.content}
+      </ReactMarkdown>
     </article>
   );
 }
