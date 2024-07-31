@@ -1,6 +1,4 @@
 export default function handler(req, res) {
-  event.preventDefault(); // empecher le rechargement de la page a la soumission du formulaire
-
   // verifier si la requete est de type POST
   if (req.method === "POST") {
     // extraire les donnees du corps de la requete
