@@ -1,16 +1,20 @@
 import classes from "../../styles/post-item.module.css";
 import Link from "next/link";
 import Image from "next/image";
+import { parseISO, format } from 'date-fns';  // pour formater la date sans gestion de fuseau horaire: npm install date-fns
 
 export default function PostItem(props) {
   const { title, image, excerpt, date, slug } = props.post;
 
   // convertir la date en format lisible
-  const formattedDate = new Date(date).toLocaleDateString("en-US", {
+  const formattedDate = new Date(date).toLocaleDateString("en-CA", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
+
+  // formater la date avec date-fns (npm install date-fns)
+  // const formattedDate = format(parseISO(date), "MMMM d, yyyy");
 
   // chemin de l'image
   const imagePath = `/images/posts/${slug}/${image}`;
