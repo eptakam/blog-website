@@ -13,6 +13,7 @@ yarn dev
 ### Markdown
 
 `npm install react-markdown` to install a package which will help us to convert markdown in jsx
+`npm install gray-matter` to retrieve the markdown data
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
