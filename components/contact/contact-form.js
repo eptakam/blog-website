@@ -1,32 +1,115 @@
 import classes from "../../styles/contact-form.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Notification from "../ui/notification";
+import { el } from "date-fns/locale";
+import { set } from "date-fns";
+
+// fonction qui enverra les donnees du formulaire de contact a notre api route.
+// elle peut etre definie dans un fichier separe et importee dans ce composant
+async function sendContactData(contactDetails) {
+  // envoyer une requete http a notre api route
+  const response = await fetch("/api/contact", {
+    method: "POST",
+    body: JSON.stringify(contactDetails),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+
+  // verifier si la requete a reussi
+  if (!response.ok) {
+    throw new Error(data.message || "Something went wrong!");
+  }
+}
 
 export default function ContactForm() {
   // On peut utiliser useRef ou useState pour recuperer les valeurs des champs
+ // par exemple : const enteredEmail = emailInputRef.current.value; et assigner emailInputRef à l'attribut ref de l'input email
+
   // ici nous utiliserons useState
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredName, setEnteredName] = useState("");
   const [enteredMessage, setEnteredMessage] = useState("");
 
+  //verifier l'etat actuel de la requete (ceci nous permettra d'afficher une notification en fonction de l'etat de la requete)
+  const [requestStatus, setRequestStatus] = useState(); // undefined, pending, success, error
+
+  // verifier si une erreur s'est produite lors de l'envoi de la requete
+  const [requestError, setRequestError] = useState();
+
+  // effacer la notification apres 3 secondes grace a useEffect, car useEffect me permet de gerer les effets secondaires dans les composants fonctionnels (changer le comportement d'un composant)
+  useEffect(() => {
+    if (requestStatus === 'success' || requestStatus === 'error') {
+      const timer = setTimeout(() => {
+        setRequestStatus(null);
+        setRequestError(null);
+      }, 3000);
+
+      // nettoyer le timer
+      return () => clearTimeout(timer);
+    }
+  }, [requestStatus]); // reagir a chaque changement de requestStatus 
+
   // fonction qui sera declenchée lorsqu'on soumettra le formulaire
-  function sendMessageHandler(event) {
+  async function sendMessageHandler(event) {
     event.preventDefault(); // empecher le rechargement de la page
 
-    // valider les donnees cote client
+    // ajouter la validation des donnees cote client ici (optionnel, car nous avons deja un minimum avec les attributs required des inputs)
 
-    // envoyer une requete http a notre api route
-    fetch("/api/contact", {
-      method: "POST",
-      body: JSON.stringify({
+    // initialiser l'etat de la requete
+    setRequestStatus("pending");
+
+    // envoyer la requete http
+    try {
+      await sendContactData({
         email: enteredEmail,
         name: enteredName,
         message: enteredMessage,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+      });
+
+      // changer l'etat de la requete
+      setRequestStatus("success");
+
+      // effacer les champs du formulaire
+      setEnteredEmail("");
+      setEnteredName("");
+      setEnteredMessage("");
+    } catch (error) {
+      // une erreur est survenue lors de l'envoi de la requete
+      setRequestError(error.message);
+      setRequestStatus("error");
+    }
   }
+
+  // setterr la notification en fonction de l'etat de la requete
+  // elle sera ensuite rendue au niveau du return (ci-dessous) ce composant
+  let notification;
+
+  if (requestStatus === "pending") {
+    notification = {
+      status: "pending",
+      title: "Sending message...",
+      message: "Your message is on its way!",
+    };
+  } else if (requestStatus === "success") {
+    notification = {
+      status: "success",
+      title: "Success!",
+      message: "Message sent successfully!",
+    };
+  } else if (requestStatus === "error") { 
+    notification = {
+      status: "error",
+      title: "Error!",
+      message: requestError,
+    };
+  }
+  //  else {
+  //   notification = null;
+  // }
+
 
   return (
     <section className={classes.contact}>
@@ -67,6 +150,14 @@ export default function ContactForm() {
           <button>Send Message</button>
         </div>
       </form>
+      {/* afficher la notification */}
+      {notification && (
+        <Notification
+          status={notification.status}
+          title={notification.title}
+          message={notification.message}
+        />
+      )}
     </section>
   );
 }

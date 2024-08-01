@@ -3,8 +3,15 @@ import { MongoClient } from "mongodb"; // npm install mongodb
 export default async function handler(req, res) {
   // verifier si la requete est de type POST
   if (req.method === "POST") {
-    // extraire les donnees du corps de la requete
+    // extraire direct des donnees du corps de la requete: pas encapsulee dans un objet (contactDetails) lors de l'envoie
     const { email, name, message } = req.body;
+
+    /*
+      Note:  
+          extraire les donnees encapsulees dans un objet lors de l'envoie ({contactDetails}) du corps de la requete
+    */
+    // const { contactDetails } = req.body; // Extraction de la clé 'contactDetails' du corps de la requête
+    // const { email, name, message } = contactDetails;   // Extraction des données encapsulées dans la clé 'contactDetails'
 
     // valider les donnees
     if (
