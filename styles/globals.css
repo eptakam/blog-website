@@ -1,10 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Roboto&family=Source+Sans+Pro:wght@300&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Roboto&family=Source+Sans+Pro:wght@300&display=swap");
 
+/* la largeur et la hauteur d'un element inclut le padding et la bordure */
 * {
   box-sizing: border-box;
 }
 
+/* Les variables CSS sont définies avec la syntaxe --nom-de-la-variable: valeur; et peuvent être utilisées ailleurs dans le CSS avec la fonction var(--nom-de-la-variable). */
+
 body {
+  /* variables définissant différentes nuances de gris en utilisant le modèle de couleur HSL (Hue, Saturation, Lightness). */
   --color-grey-50: hsl(265, 55%, 96%);
   --color-grey-100: hsl(265, 19%, 88%);
   --color-grey-200: hsl(265, 7%, 70%);
@@ -16,6 +20,7 @@ body {
   --color-grey-800: hsl(276, 5%, 20%);
   --color-grey-900: hsl(280, 5%, 13%);
 
+  /* variables définissant différentes nuances de la couleur primaire en utilisant des valeurs hexadécimales. */
   --color-primary-50: #c8b3ce;
   --color-primary-100: #a07aaa;
   --color-primary-200: #884c97;
@@ -25,12 +30,14 @@ body {
   --color-primary-600: #480264;
   --color-primary-700: #3d0264;
 
+  /* variables définissant des couleurs pour les états de succès et d'erreur. */
   --color-success-100: #a2f0bc;
   --color-success-500: #12bd4b;
 
   --color-error-100: #f1acc9;
   --color-error-500: #a10c4a;
 
+  /* variables définissant différentes tailles en utilisant des valeurs (unité) en rem. */
   --size-1: 0.25rem;
   --size-2: 0.5rem;
   --size-3: 0.75rem;
@@ -42,22 +49,24 @@ body {
   --size-20: 5rem;
   --size-40: 10rem;
 
-  margin: 0;
+  margin: 0;  /* supprimer la marge par défaut */
   background-color: var(--color-grey-500);
   color: #252525;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
+/* si la police Oswald n'est pas disponible, la police Roboto est utilisée comme police de secours. si Roboto n'est pas disponible, la police sans-serif par défaut est utilisée. */
 h1,
 h2,
 h3 {
-  font-family: 'Oswald', 'Roboto', sans-serif;
+  font-family: "Oswald", "Roboto", sans-serif;
 }
 
 a {
   text-decoration: none;
 }
 
+/* l'element bouton herite de la police de caractère de son parent cad qu'il aura la meme police de caractere que les textes environnants */
 button {
   font: inherit;
   cursor: pointer;
