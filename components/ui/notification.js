@@ -4,7 +4,8 @@
     nous avons besoin des notifications juste au niveau de notre formulaire de contact. nous pouvons donc les gerer localement dans le composant contact-form.js en important le composant Notification.
 */
 
-import ReactDOM from 'react-dom';
+
+import ReactDOM from 'react-dom'; // permettra de convertir notre composant de notification en portail
 
 import classes from '../../styles/notification.module.css';
 
@@ -27,12 +28,13 @@ function Notification(props) {
 
   const cssClasses = `${classes.notification} ${statusClasses}`;
 
-  return (
+  // retourner le composant de notification converti en portail (exploite dans le fichier _document.js)
+  return ReactDOM.createPortal((
     <div className={cssClasses}>
       <h2>{title}</h2>
       <p>{message}</p>
     </div>
-  );
+  ), document.getElementById('notifications')); // le composant de notification sera rendu dans la div avec l'id 'notifications' dans le fichier _document.js
 }
 
 export default Notification;
