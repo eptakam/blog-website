@@ -8,7 +8,7 @@ function MyApp({ Component, pageProps }) {
     <Layout>
       <Head>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <link rel="icon" href="/public/favicon.ico" type="image/x-icon"></link>
+        <link rel="icon" href="/favicon.ico" type="image/x-icon"></link>
       </Head>
       <Component {...pageProps} />
     </Layout>
