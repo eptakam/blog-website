@@ -1,10 +1,25 @@
+/*
+  en faisant npm run build, nous avons remarque que notre [slug].js est trop lourd. en regardant de pret, nous avons vu que c'est a cause de react-syntax-highlighter de ce fichier post-content.js qui est trop lourd.
+
+  pour resoudre ce probleme, nous allons utiliser la version light de react-syntax-highlighter
+*/
+
 import React from "react";
 import classes from "../../../styles/post-content.module.css";
 import PostHeader from "./post-header";
 import ReactMarkdown from "react-markdown"; // npm install react-markdown: convert markdown to html
 import Image from "next/image";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"; // npm install react-syntax-highlighter
-import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism"; // npm install react-syntax-highlighter
+// attention: react-syntax-highlighter est trop lourde d'ou nous prndrons plutot la version light
+import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter"; // npm install react-syntax-highlighter 
+// import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism"; 
+import atomDark from "react-syntax-highlighter/dist/cjs/styles/prism/atom-dark"; 
+// importation du langage javascript et css utlises dans le code snippet
+import js from "react-syntax-highlighter/dist/cjs/languages/prism/javascript"; 
+import css from "react-syntax-highlighter/dist/cjs/languages/prism/css"; 
+
+// appeler les identifiants des langages presents dans le code snippet de mon markdown file (js et css dans ce cas)
+SyntaxHighlighter.registerLanguage("js", js);
+SyntaxHighlighter.registerLanguage("css", css);
 
 export default function PostContent(props) {
   const { post } = props;
@@ -18,38 +33,8 @@ export default function PostContent(props) {
     comment lui dire que nous voulons utiliser la fonction Image de Next.js pour rendre les images?
   */
 
-  // ceci ne fonctionne pas avec la nouvelle version de react-markdown!
-
-  // const customRenderers = {
-  //   // react-markdown appelera cette fonction pour chaque image qu'il trouvera dans le markdown
-  //   image(image) {
-  //     return (
-  //       <Image
-  //         src={`/images/posts/${post.slug}/${image.src}`}
-  //         alt={image.alt}
-  //         width={600}
-  //         height={300}
-  //       />
-  //     );
-  //   },
-  // };
-
   const customComponents = {
-    // ceci fonctionne mais cause l'erreur mentionnee ci-dessous
-
-    // react-markdown appelera cette fonction pour chaque image qu'il trouvera dans le markdown
-    // img({ node, ...props }) {
-    //   return (
-    //     <Image
-    //       src={`/images/posts/${post.slug}/${props.src}`}
-    //       alt={props.alt}
-    //       width={600}
-    //       height={300}
-    //     />
-    //   );
-    // },
-
-    // pour eviter les erreurs dues au fait que Next js rend cette image dans une div qui est contenue dans un paragraphe (markdown)
+    // pour eviter les erreurs dues au fait que Next js rend cette image dans une div qui sera elle-meme contenue dans un paragraphe (markdown) par la suite
     p(paragraph) {
       const { node } = paragraph;
 
@@ -94,21 +79,6 @@ export default function PostContent(props) {
         </code>
       );
     },
-
-
-    // ne fonctionne pas avec la nouvelle version de react-markdown!
-
-    // code(code) {
-    //   const { language, value } = code;
-    //   // const language = className.split("-")[1]; // extraire le langage du code snippet
-    //   return (
-    //     <SyntaxHighlighter
-    //       style={atomDark}
-    //       language={language}
-    //       children={value}
-    //     />
-    //   );
-    // },
   };
 
   return (
