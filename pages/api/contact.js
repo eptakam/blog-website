@@ -38,10 +38,10 @@ export default async function handler(req, res) {
     // se connecter a la BD ('my-site' est le nom de la BD)
     let client;
 
+    const connectionString = `mongodb+srv://${process.env.mongodb_username}:${process.env.mongodb_password}@${process.env.mongodb_clustername}.n0prgxt.mongodb.net/${process.env.mongodb_database}?retryWrites=true&w=majority`;
+
     try {
-      client = await MongoClient.connect(
-        "mongodb+srv://emmataks:eblAM82OGS1jU73K@cluster0.n0prgxt.mongodb.net/my-site?retryWrites=true&w=majority&appName=Cluster0"
-      );
+      client = await MongoClient.connect(connectionString);
     } catch (error) {
       res
         .status(500)
