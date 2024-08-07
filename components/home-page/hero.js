@@ -18,7 +18,7 @@ export default function Hero() {
       <h1>Hi, I'm Emmanuel</h1>
       <p>
         I blog about web development - especially frontend frameworks like
-        Angular or React.
+        JQuery or React.
       </p>
     </section>
   );
